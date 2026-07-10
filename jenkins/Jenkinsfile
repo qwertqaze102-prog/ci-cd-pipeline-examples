@@ -1,0 +1,24 @@
+pipeline {
+  agent any
+  stages {
+    stage('Checkout') {
+      steps { checkout scm }
+    }
+    stage('Build') {
+      steps {
+        sh 'docker build -t portfolio-demo:${BUILD_NUMBER} -f app/Dockerfile app'
+      }
+    }
+    stage('Test') {
+      steps {
+        sh 'sh -n app/hello.sh'
+      }
+    }
+    stage('Deploy') {
+      when { branch 'main' }
+      steps {
+        echo "Deploy image portfolio-demo:${BUILD_NUMBER}"
+      }
+    }
+  }
+}

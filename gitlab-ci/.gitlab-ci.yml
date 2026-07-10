@@ -1,0 +1,18 @@
+stages: [build, test, deploy]
+
+build-image:
+  stage: build
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA -f app/Dockerfile app
+
+test-script:
+  stage: test
+  script:
+    - sh -n app/hello.sh
+
+deploy-staging:
+  stage: deploy
+  script:
+    - echo "Deploy $CI_COMMIT_SHORT_SHA to staging"
+  only:
+    - main
